@@ -50,6 +50,28 @@ export default function App() {
     setIsCartOpen(true);
   };
 
+  // Función para enviar el pedido por WhatsApp
+const sendWhatsAppOrder = () => {
+  if (cart.length === 0) return;
+
+  // Cambia este número por tu número real de WhatsApp (con código de país, ej: 5491122334455)
+  const phoneNumber = "5493518731527"; 
+
+  // Armamos la lista de productos comprados
+  let message = "¡Hola *Aura & Armonía*! 🪷 Quería realizar el siguiente pedido:\n\n";
+  
+  cart.forEach((item) => {
+    message += `• ${item.quantity}x ${item.name} - $${(item.price * item.quantity).toFixed(2)}\n`;
+  });
+
+  const total = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
+  message += `\n*Total:* $${total.toFixed(2)}\n\n¡Muchas gracias!`;
+
+  // Abrir enlace de WhatsApp
+  const encodedMessage = encodeURIComponent(message);
+  window.open(`https://wa.me/${phoneNumber}?text=${encodedMessage}`, "_blank");
+};
+
   const updateQuantity = (id, delta) => {
     setCart((prevCart) =>
       prevCart.map((item) => {
@@ -172,7 +194,33 @@ export default function App() {
             <button className="checkout-btn" onClick={() => { alert("¡Compra realizada!"); setCart([]); setIsCartOpen(false); }}>
               Finalizar Compra
             </button>
+            <button 
+  className="whatsapp-btn" 
+  onClick={sendWhatsAppOrder}
+  disabled={cart.length === 0}
+  style={{
+    backgroundColor: '#25D366',
+    color: 'white',
+    border: 'none',
+    padding: '12px 20px',
+    borderRadius: '8px',
+    fontSize: '16px',
+    fontWeight: 'bold',
+    cursor: cart.length === 0 ? 'not-allowed' : 'pointer',
+    width: '100%',
+    marginTop: '15px',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: '8px'
+  }}
+>
+  📲 Enviar pedido por WhatsApp
+</button>
           </div>
+          
+
+
         )}
       </aside>
     </div>
